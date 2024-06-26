@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:lesson_64_provider_statemenegment/controllers/cart_controller.dart';
 import 'package:lesson_64_provider_statemenegment/controllers/products_controller.dart';
+import 'package:lesson_64_provider_statemenegment/models/product.dart';
 import 'package:lesson_64_provider_statemenegment/views/screens/cart_screen.dart';
+import 'package:lesson_64_provider_statemenegment/views/widgets/create_product_dialog.dart';
 import 'package:lesson_64_provider_statemenegment/views/widgets/product_item.dart';
 
 class ProductsScreen extends StatefulWidget {
@@ -13,7 +14,19 @@ class ProductsScreen extends StatefulWidget {
 
 class _ProductsScreenState extends State<ProductsScreen> {
   final productsController = ProductsController();
-  final cartController = CartController();
+
+  void _addProduct() async {
+    final newProduct = await showDialog<Product>(
+      context: context,
+      builder: (ctx) => const CreateProductDialog(),
+    );
+
+    if (newProduct != null) {
+      setState(() {
+        productsController.createProduct(newProduct);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +40,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (ctx) => CartScreen(cartController: cartController),
+                  builder: (ctx) => const CartScreen(),
                 ),
               );
             },
@@ -41,9 +54,12 @@ class _ProductsScreenState extends State<ProductsScreen> {
             final product = productsController.list[index];
             return ProductItem(
               product: product,
-              cartController: cartController,
             );
           }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _addProduct,
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }

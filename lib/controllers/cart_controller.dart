@@ -1,7 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:lesson_64_provider_statemenegment/models/cart.dart';
 import 'package:lesson_64_provider_statemenegment/models/product.dart';
 
-class CartController {
+class CartController extends ChangeNotifier {
   final Cart _cart = Cart(products: {}, totalPrice: 0);
 
   Cart get cart {
@@ -23,5 +24,7 @@ class CartController {
       print(pro['product'].title);
       print(pro['amount']);
     }
+
+    notifyListeners();
   }
 }
