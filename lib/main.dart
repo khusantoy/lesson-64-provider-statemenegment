@@ -5,25 +5,27 @@ import 'package:lesson_64_provider_statemenegment/views/screens/products_screen.
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const MainApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (ctx) {
-        return CartController();
-      },
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (ctx) {
+          return CartController();
+        }),
+      ],
       builder: (context, child) {
-       return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.light,
-        darkTheme: AppTheme.dark,
-        home: const ProductsScreen(),
-      ); 
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.light,
+          darkTheme: AppTheme.dark,
+          home: ProductsScreen(),
+        );
       },
     );
   }

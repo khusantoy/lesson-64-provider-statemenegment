@@ -3,7 +3,10 @@ import 'package:lesson_64_provider_statemenegment/models/cart.dart';
 import 'package:lesson_64_provider_statemenegment/models/product.dart';
 
 class CartController extends ChangeNotifier {
-  final Cart _cart = Cart(products: {}, totalPrice: 0);
+  final Cart _cart = Cart(
+    products: {},
+    totalPrice: 0,
+  );
 
   Cart get cart {
     return _cart;
@@ -18,13 +21,37 @@ class CartController extends ChangeNotifier {
         "amount": 1,
       };
     }
-    _cart.totalPrice += _cart.products[product.id]["product"].price;
-
-    for (var pro in _cart.products.values) {
-      print(pro['product'].title);
-      print(pro['amount']);
-    }
-
+    calculateTotal();
     notifyListeners();
+  }
+
+  void removeFromCart(String productId) {
+    if (_cart.products.containsKey(productId)) {
+      if (_cart.products[productId]["amount"] == 1) {
+        _cart.products.removeWhere((key, value) {
+          return key == productId;
+        });
+      } else {
+        _cart.products[productId]["amount"]--;
+      }
+      calculateTotal();
+      notifyListeners();
+    }
+  }
+
+  void calculateTotal() {
+    double total = 0;
+    _cart.products.forEach((key, value) {
+      total += value['product'].price * value['amount'];
+    });
+    _cart.totalPrice = total;
+  }
+
+  bool isInCart(String productId) {
+    return _cart.products.containsKey(productId);
+  }
+
+  int getProductAmount(String productId) {
+    return _cart.products[productId]['amount'];
   }
 }
